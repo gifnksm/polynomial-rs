@@ -1,0 +1,18 @@
+language: rust
+
+script:
+  - cargo build --verbose
+  - cargo test --verbose
+  - cargo doc
+
+after_success: |
+  [ $TRAVIS_BRANCH = master ] &&
+  [ $TRAVIS_PULL_REQUEST = false ] &&
+  echo '<meta http-equiv=refresh content=0;url=polynomial/index.html>' > target/doc/index.html &&
+  sudo pip install ghp-import &&
+  ghp-import -n target/doc &&
+  git push -fq https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git gh-pages
+
+env:
+  global:
+    secure: "TwGRf6pujZ+g2eye0ypGTlZBNuLfkItt6ubCcddafRE7W7T66CV/SwrF1rreaGd2DTrXW1Zkqag8M5SW36qCG+VpzpX8+BkERZmQTkJrZtJ8PdF0ry5D156xuz0B5f1nuzuGLvYwZNQpfxzUCy7KPW6/tCgyS826LqqFbb6CaMM="

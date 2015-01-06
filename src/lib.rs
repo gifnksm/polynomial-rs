@@ -1,4 +1,4 @@
-//! Manipulations and data types that represent polynomial
+//! Manipulations and data types that represent polynomial.
 
 #![warn(bad_style, missing_docs,
         unused, unused_extern_crates, unused_import_braces,
