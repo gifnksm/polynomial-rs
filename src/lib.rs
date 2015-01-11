@@ -4,12 +4,9 @@
         unused, unused_extern_crates, unused_import_braces,
         unused_qualifications, unused_results, unused_typecasts)]
 
-#![feature(associated_types, default_type_params, old_orphan_check, macro_rules)]
-
 extern crate num;
 
 use std::{cmp, fmt};
-use std::iter::{AdditiveIterator, MultiplicativeIterator};
 use std::ops::{Add, Mul, Neg, Sub};
 use num::{Zero, One};
 
@@ -59,11 +56,11 @@ impl<T: Zero + One + Clone> Polynomial<T> {
 impl<T> Polynomial<T> {
     /// Gets the slice of internal data.
     #[inline]
-    pub fn data(&self) -> &[T] { self.data.as_slice() }
+    pub fn data(&self) -> &[T] { &self.data[] }
 }
 
 impl<T> Polynomial<T>
-    where T: Zero + One + Eq + Neg<Output = T> + Ord + fmt::Show + Clone
+    where T: Zero + One + Eq + Neg<Output = T> + Ord + fmt::String + Clone
 {
     /// Pretty prints the polynomial.
     pub fn pretty(&self, x: &str) -> String {
@@ -184,16 +181,16 @@ impl<'a, 'b, Lhs, Rhs> Add<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
         let min_len = cmp::min(self.data.len(), other.data.len());
 
         let mut sum = Vec::with_capacity(max_len);
-        for i in range(0, min_len) {
+        for i in (0 .. min_len) {
             sum.push(self.data[i].clone() + other.data[i].clone());
         }
 
         if self.data.len() <= other.data.len() {
-            for i in range(min_len, max_len) {
+            for i in (min_len .. max_len) {
                 sum.push(num::zero::<Lhs>() + other.data[i].clone());
             }
         } else {
-            for i in range(min_len, max_len) {
+            for i in (min_len .. max_len) {
                 sum.push(self.data[i].clone() + num::zero::<Rhs>());
             }
         }
@@ -215,15 +212,15 @@ impl<'a, 'b, Lhs, Rhs> Sub<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
         let max_len = cmp::max(self.data.len(), other.data.len());
 
         let mut sub = Vec::with_capacity(max_len);
-        for i in range(0, min_len) {
+        for i in (0 .. min_len) {
             sub.push(self.data[i].clone() - other.data[i].clone());
         }
         if self.data.len() <= other.data.len() {
-            for i in range(min_len, max_len) {
+            for i in (min_len .. max_len) {
                 sub.push(num::zero::<Lhs>() - other.data[i].clone())
             }
         } else {
-            for i in range(min_len, max_len) {
+            for i in (min_len .. max_len) {
                 sub.push(self.data[i].clone() - num::zero::<Rhs>())
             }
         }
@@ -244,9 +241,9 @@ impl<'a, 'b, Lhs, Rhs> Mul<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
 
         let slen = self.data.len();
         let olen = other.data.len();
-        let prod = range(0, slen + olen - 1).map(|i| {
+        let prod = (0 .. slen + olen - 1).map(|i| {
             let mut p = num::zero::<<Lhs as Mul<Rhs>>::Output>();
-            for k in range(0, slen) {
+            for k in (0 .. slen) {
                 if i - k >= olen { continue }
                 p = p + self.data[k].clone() * other.data[i - k].clone();
             }
@@ -266,26 +263,6 @@ impl<T: Zero + Clone> Zero for Polynomial<T> {
 impl<T: Zero + One + Clone> One for Polynomial<T> {
     #[inline]
     fn one() -> Polynomial<T> { Polynomial { data: vec![One::one()] } }
-}
-
-impl<A, T> AdditiveIterator<Polynomial<A>> for T
-    where A: Zero + Add<A, Output = A> + Clone, T: Iterator<Item = Polynomial<A>>
-{
-    #[inline]
-    fn sum(self) -> Polynomial<A> {
-        let init: Polynomial<A> = Zero::zero();
-        self.fold(init, |acc, x| acc + x)
-    }
-}
-
-impl<A, T> MultiplicativeIterator<Polynomial<A>> for T
-    where A: Zero + One + Mul<A, Output = A> + Clone, T: Iterator<Item = Polynomial<A>>
-{
-    #[inline]
-    fn product(self) -> Polynomial<A> {
-        let init: Polynomial<A> = One::one();
-        self.fold(init, |acc, x| acc * x)
-    }
 }
 
 #[cfg(test)]
@@ -354,8 +331,8 @@ mod tests {
 
     #[test]
     fn eval() {
-        fn check(pol: &[i32], f: |i32| -> i32) {
-            for n in range(-10, 10) {
+        fn check<F: Fn(i32) -> i32>(pol: &[i32], f: F) {
+            for n in (-10 .. 10) {
                 assert_eq!(f(n), Polynomial::new(pol.to_vec()).eval(n));
             }
         }
