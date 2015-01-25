@@ -60,7 +60,7 @@ impl<T> Polynomial<T> {
 }
 
 impl<T> Polynomial<T>
-    where T: Zero + One + Eq + Neg<Output = T> + Ord + fmt::String + Clone
+    where T: Zero + One + Eq + Neg<Output = T> + Ord + fmt::Display + Clone
 {
     /// Pretty prints the polynomial.
     pub fn pretty(&self, x: &str) -> String {
