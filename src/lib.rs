@@ -11,7 +11,7 @@ use std::ops::{Add, Mul, Neg, Sub};
 use num::{Zero, One};
 
 /// Polynomial expression
-#[derive(Eq, PartialEq, Clone, Show)]
+#[derive(Eq, PartialEq, Clone, Debug)]
 pub struct Polynomial<T> { data: Vec<T> }
 
 impl<T: Zero> Polynomial<T> {
@@ -56,7 +56,7 @@ impl<T: Zero + One + Clone> Polynomial<T> {
 impl<T> Polynomial<T> {
     /// Gets the slice of internal data.
     #[inline]
-    pub fn data(&self) -> &[T] { &self.data[] }
+    pub fn data(&self) -> &[T] { &self.data }
 }
 
 impl<T> Polynomial<T>
@@ -243,8 +243,9 @@ impl<'a, 'b, Lhs, Rhs> Mul<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
         let olen = other.data.len();
         let prod = (0 .. slen + olen - 1).map(|i| {
             let mut p = num::zero::<<Lhs as Mul<Rhs>>::Output>();
-            for k in (0 .. slen) {
-                if i - k >= olen { continue }
+            let kstart = cmp::max(olen, i + 1) - olen;
+            let kend = cmp::min(slen, i + 1);
+            for k in kstart .. kend {
                 p = p + self.data[k].clone() * other.data[i - k].clone();
             }
             p
