@@ -2,7 +2,7 @@
 
 #![warn(bad_style, missing_docs,
         unused, unused_extern_crates, unused_import_braces,
-        unused_qualifications, unused_results, unused_typecasts)]
+        unused_qualifications, unused_results)]
 
 extern crate num;
 
@@ -19,7 +19,7 @@ impl<T: Zero> Polynomial<T> {
     ///
     /// ```rust
     /// use polynomial::Polynomial;
-    /// let poly = Polynomial::new(vec![1i, 2, 3]);
+    /// let poly = Polynomial::new(vec![1, 2, 3]);
     /// assert_eq!("1+2*x+3*x^2", poly.pretty("x"));
     /// ```
     #[inline]
@@ -36,7 +36,7 @@ impl<T: Zero + One + Clone> Polynomial<T> {
     ///
     /// ```rust
     /// use polynomial::Polynomial;
-    /// let poly = Polynomial::new(vec![1i, 2, 3]);
+    /// let poly = Polynomial::new(vec![1, 2, 3]);
     /// assert_eq!(1, poly.eval(0));
     /// assert_eq!(6, poly.eval(1));
     /// assert_eq!(17, poly.eval(2));
