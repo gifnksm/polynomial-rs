@@ -1,8 +1,14 @@
 //! Manipulations and data types that represent polynomial.
 
-#![warn(bad_style, missing_docs,
-        unused, unused_extern_crates, unused_import_braces,
-        unused_qualifications, unused_results)]
+#![warn(bad_style)]
+#![warn(missing_docs)]
+#![warn(trivial_casts)]
+#![warn(trivial_numeric_casts)]
+#![warn(unused)]
+#![warn(unused_extern_crates)]
+#![warn(unused_import_braces)]
+#![warn(unused_qualifications)]
+#![warn(unused_results)]
 
 extern crate num;
 
@@ -12,7 +18,9 @@ use num::{Zero, One};
 
 /// Polynomial expression
 #[derive(Eq, PartialEq, Clone, Debug)]
-pub struct Polynomial<T> { data: Vec<T> }
+pub struct Polynomial<T> {
+    data: Vec<T>,
+}
 
 impl<T: Zero> Polynomial<T> {
     /// Creates new `Polynomial`.
@@ -56,7 +64,9 @@ impl<T: Zero + One + Clone> Polynomial<T> {
 impl<T> Polynomial<T> {
     /// Gets the slice of internal data.
     #[inline]
-    pub fn data(&self) -> &[T] { &self.data }
+    pub fn data(&self) -> &[T] {
+        &self.data
+    }
 }
 
 impl<T> Polynomial<T>
@@ -64,27 +74,41 @@ impl<T> Polynomial<T>
 {
     /// Pretty prints the polynomial.
     pub fn pretty(&self, x: &str) -> String {
-        if self.is_zero() { return "0".to_string() }
+        if self.is_zero() {
+            return "0".to_string();
+        }
 
         let one = One::one();
         let mut s = Vec::new();
         for (i, n) in self.data.iter().enumerate() {
             // output n*x^i / -n*x^i
-            if n.is_zero() { continue }
+            if n.is_zero() {
+                continue;
+            }
 
             let term = if i.is_zero() {
                 n.to_string()
             } else if i == 1 {
-                if (*n) == one { x.to_string() }
-                else if (*n) == -one.clone() { format!("-{}", x) }
-                else { format!("{}*{}", n.to_string(), x) }
+                if (*n) == one {
+                    x.to_string()
+                } else if (*n) == -one.clone() {
+                    format!("-{}", x)
+                } else {
+                    format!("{}*{}", n.to_string(), x)
+                }
             } else {
-                if (*n) == one { format!("{}^{}", x, i) }
-                else if (*n) == -one.clone() { format!("-{}^{}", x, i) }
-                else { format!("{}*{}^{}", n.to_string(), x, i) }
+                if (*n) == one {
+                    format!("{}^{}", x, i)
+                } else if (*n) == -one.clone() {
+                    format!("-{}^{}", x, i)
+                } else {
+                    format!("{}*{}^{}", n.to_string(), x, i)
+                }
             };
 
-            if s.len() > 0 && (*n) > Zero::zero() { s.push("+".to_string()); }
+            if s.len() > 0 && (*n) > Zero::zero() {
+                s.push("+".to_string());
+            }
             s.push(term);
         }
 
@@ -98,7 +122,9 @@ impl<'a, T> Neg for Polynomial<T>
     type Output = Polynomial<<T as Neg>::Output>;
 
     #[inline]
-    fn neg(self) -> Polynomial<<T as Neg>::Output> { -&self }
+    fn neg(self) -> Polynomial<<T as Neg>::Output> {
+        -&self
+    }
 }
 
 impl<'a, T> Neg for &'a Polynomial<T>
@@ -181,16 +207,16 @@ impl<'a, 'b, Lhs, Rhs> Add<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
         let min_len = cmp::min(self.data.len(), other.data.len());
 
         let mut sum = Vec::with_capacity(max_len);
-        for i in (0 .. min_len) {
+        for i in 0..min_len {
             sum.push(self.data[i].clone() + other.data[i].clone());
         }
 
         if self.data.len() <= other.data.len() {
-            for i in (min_len .. max_len) {
+            for i in min_len..max_len {
                 sum.push(num::zero::<Lhs>() + other.data[i].clone());
             }
         } else {
-            for i in (min_len .. max_len) {
+            for i in min_len..max_len {
                 sum.push(self.data[i].clone() + num::zero::<Rhs>());
             }
         }
@@ -212,15 +238,15 @@ impl<'a, 'b, Lhs, Rhs> Sub<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
         let max_len = cmp::max(self.data.len(), other.data.len());
 
         let mut sub = Vec::with_capacity(max_len);
-        for i in (0 .. min_len) {
+        for i in 0..min_len {
             sub.push(self.data[i].clone() - other.data[i].clone());
         }
         if self.data.len() <= other.data.len() {
-            for i in (min_len .. max_len) {
+            for i in min_len..max_len {
                 sub.push(num::zero::<Lhs>() - other.data[i].clone())
             }
         } else {
-            for i in (min_len .. max_len) {
+            for i in min_len..max_len {
                 sub.push(self.data[i].clone() - num::zero::<Rhs>())
             }
         }
@@ -237,33 +263,43 @@ impl<'a, 'b, Lhs, Rhs> Mul<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
     type Output = Polynomial<<Lhs as Mul<Rhs>>::Output>;
 
     fn mul(self, other: &Polynomial<Rhs>) -> Polynomial<<Lhs as Mul<Rhs>>::Output> {
-        if self.is_zero() || other.is_zero() { return Polynomial::new(vec![]) }
+        if self.is_zero() || other.is_zero() {
+            return Polynomial::new(vec![]);
+        }
 
         let slen = self.data.len();
         let olen = other.data.len();
-        let prod = (0 .. slen + olen - 1).map(|i| {
-            let mut p = num::zero::<<Lhs as Mul<Rhs>>::Output>();
-            let kstart = cmp::max(olen, i + 1) - olen;
-            let kend = cmp::min(slen, i + 1);
-            for k in kstart .. kend {
-                p = p + self.data[k].clone() * other.data[i - k].clone();
-            }
-            p
-        }).collect();
+        let prod = (0..slen + olen - 1)
+                       .map(|i| {
+                           let mut p = num::zero::<<Lhs as Mul<Rhs>>::Output>();
+                           let kstart = cmp::max(olen, i + 1) - olen;
+                           let kend = cmp::min(slen, i + 1);
+                           for k in kstart..kend {
+                               p = p + self.data[k].clone() * other.data[i - k].clone();
+                           }
+                           p
+                       })
+                       .collect();
         Polynomial::new(prod)
     }
 }
 
 impl<T: Zero + Clone> Zero for Polynomial<T> {
     #[inline]
-    fn zero() -> Polynomial<T> { Polynomial { data: vec![] } }
+    fn zero() -> Polynomial<T> {
+        Polynomial { data: vec![] }
+    }
     #[inline]
-    fn is_zero(&self) -> bool { self.data.is_empty() }
+    fn is_zero(&self) -> bool {
+        self.data.is_empty()
+    }
 }
 
 impl<T: Zero + One + Clone> One for Polynomial<T> {
     #[inline]
-    fn one() -> Polynomial<T> { Polynomial { data: vec![One::one()] } }
+    fn one() -> Polynomial<T> {
+        Polynomial { data: vec![One::one()] }
+    }
 }
 
 #[cfg(test)]
@@ -333,7 +369,7 @@ mod tests {
     #[test]
     fn eval() {
         fn check<F: Fn(i32) -> i32>(pol: &[i32], f: F) {
-            for n in (-10 .. 10) {
+            for n in -10..10 {
                 assert_eq!(f(n), Polynomial::new(pol.to_vec()).eval(n));
             }
         }
@@ -341,7 +377,7 @@ mod tests {
         check(&[1], |_x| 1);
         check(&[1, 1], |x| x + 1);
         check(&[0, 1], |x| x);
-        check(&[10, -10, 10], |x| 10*x*x - 10 * x + 10);
+        check(&[10, -10, 10], |x| 10 * x * x - 10 * x + 10);
     }
 
     #[test]
