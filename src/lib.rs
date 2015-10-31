@@ -1,8 +1,14 @@
 //! Manipulations and data types that represent polynomial.
 
-#![warn(bad_style, missing_docs,
-        unused, unused_extern_crates, unused_import_braces,
-        unused_qualifications, unused_results)]
+#![warn(bad_style)]
+#![warn(missing_docs)]
+#![warn(trivial_casts)]
+#![warn(trivial_numeric_casts)]
+#![warn(unused)]
+#![warn(unused_extern_crates)]
+#![warn(unused_import_braces)]
+#![warn(unused_qualifications)]
+#![warn(unused_results)]
 
 extern crate num;
 
@@ -201,16 +207,16 @@ impl<'a, 'b, Lhs, Rhs> Add<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
         let min_len = cmp::min(self.data.len(), other.data.len());
 
         let mut sum = Vec::with_capacity(max_len);
-        for i in (0..min_len) {
+        for i in 0..min_len {
             sum.push(self.data[i].clone() + other.data[i].clone());
         }
 
         if self.data.len() <= other.data.len() {
-            for i in (min_len..max_len) {
+            for i in min_len..max_len {
                 sum.push(num::zero::<Lhs>() + other.data[i].clone());
             }
         } else {
-            for i in (min_len..max_len) {
+            for i in min_len..max_len {
                 sum.push(self.data[i].clone() + num::zero::<Rhs>());
             }
         }
@@ -232,15 +238,15 @@ impl<'a, 'b, Lhs, Rhs> Sub<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
         let max_len = cmp::max(self.data.len(), other.data.len());
 
         let mut sub = Vec::with_capacity(max_len);
-        for i in (0..min_len) {
+        for i in 0..min_len {
             sub.push(self.data[i].clone() - other.data[i].clone());
         }
         if self.data.len() <= other.data.len() {
-            for i in (min_len..max_len) {
+            for i in min_len..max_len {
                 sub.push(num::zero::<Lhs>() - other.data[i].clone())
             }
         } else {
-            for i in (min_len..max_len) {
+            for i in min_len..max_len {
                 sub.push(self.data[i].clone() - num::zero::<Rhs>())
             }
         }
@@ -363,7 +369,7 @@ mod tests {
     #[test]
     fn eval() {
         fn check<F: Fn(i32) -> i32>(pol: &[i32], f: F) {
-            for n in (-10..10) {
+            for n in -10..10 {
                 assert_eq!(f(n), Polynomial::new(pol.to_vec()).eval(n));
             }
         }
