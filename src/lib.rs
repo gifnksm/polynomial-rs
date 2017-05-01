@@ -10,11 +10,11 @@
 #![warn(unused_qualifications)]
 #![warn(unused_results)]
 
-extern crate num;
+extern crate num_traits;
 
 use std::{cmp, fmt};
 use std::ops::{Add, Mul, Neg, Sub};
-use num::{Zero, One};
+use num_traits::{Zero, One};
 
 /// Polynomial expression
 #[derive(Eq, PartialEq, Clone, Debug)]
@@ -216,11 +216,11 @@ impl<'a, 'b, Lhs, Rhs> Add<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
 
         if self.data.len() <= other.data.len() {
             for i in min_len..max_len {
-                sum.push(num::zero::<Lhs>() + other.data[i].clone());
+                sum.push(num_traits::zero::<Lhs>() + other.data[i].clone());
             }
         } else {
             for i in min_len..max_len {
-                sum.push(self.data[i].clone() + num::zero::<Rhs>());
+                sum.push(self.data[i].clone() + num_traits::zero::<Rhs>());
             }
         }
 
@@ -247,11 +247,11 @@ impl<'a, 'b, Lhs, Rhs> Sub<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
         }
         if self.data.len() <= other.data.len() {
             for i in min_len..max_len {
-                sub.push(num::zero::<Lhs>() - other.data[i].clone())
+                sub.push(num_traits::zero::<Lhs>() - other.data[i].clone())
             }
         } else {
             for i in min_len..max_len {
-                sub.push(self.data[i].clone() - num::zero::<Rhs>())
+                sub.push(self.data[i].clone() - num_traits::zero::<Rhs>())
             }
         }
         Polynomial::new(sub)
@@ -276,7 +276,7 @@ impl<'a, 'b, Lhs, Rhs> Mul<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
         let olen = other.data.len();
         let prod = (0..slen + olen - 1)
             .map(|i| {
-                let mut p = num::zero::<<Lhs as Mul<Rhs>>::Output>();
+                let mut p = num_traits::zero::<<Lhs as Mul<Rhs>>::Output>();
                 let kstart = cmp::max(olen, i + 1) - olen;
                 let kend = cmp::min(slen, i + 1);
                 for k in kstart..kend {
