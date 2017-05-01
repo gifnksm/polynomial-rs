@@ -117,7 +117,8 @@ impl<T> Polynomial<T>
 }
 
 impl<'a, T> Neg for Polynomial<T>
-    where T: Neg + Zero + Clone, <T as Neg>::Output: Zero
+    where T: Neg + Zero + Clone,
+          <T as Neg>::Output: Zero
 {
     type Output = Polynomial<<T as Neg>::Output>;
 
@@ -128,7 +129,8 @@ impl<'a, T> Neg for Polynomial<T>
 }
 
 impl<'a, T> Neg for &'a Polynomial<T>
-    where T: Neg + Zero + Clone, <T as Neg>::Output: Zero
+    where T: Neg + Zero + Clone,
+          <T as Neg>::Output: Zero
 {
     type Output = Polynomial<<T as Neg>::Output>;
 
@@ -197,7 +199,8 @@ macro_rules! forward_all_binop {
 forward_all_binop!(impl Add, add);
 
 impl<'a, 'b, Lhs, Rhs> Add<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
-    where Lhs: Zero + Add<Rhs> + Clone, Rhs: Zero + Clone,
+    where Lhs: Zero + Add<Rhs> + Clone,
+          Rhs: Zero + Clone,
           <Lhs as Add<Rhs>>::Output: Zero
 {
     type Output = Polynomial<<Lhs as Add<Rhs>>::Output>;
@@ -228,7 +231,8 @@ impl<'a, 'b, Lhs, Rhs> Add<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
 forward_all_binop!(impl Sub, sub);
 
 impl<'a, 'b, Lhs, Rhs> Sub<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
-    where Lhs: Zero + Sub<Rhs> + Clone, Rhs: Zero + Clone,
+    where Lhs: Zero + Sub<Rhs> + Clone,
+          Rhs: Zero + Clone,
           <Lhs as Sub<Rhs>>::Output: Zero
 {
     type Output = Polynomial<<Lhs as Sub<Rhs>>::Output>;
@@ -257,7 +261,8 @@ impl<'a, 'b, Lhs, Rhs> Sub<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
 forward_all_binop!(impl Mul, mul);
 
 impl<'a, 'b, Lhs, Rhs> Mul<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
-    where Lhs: Zero + Mul<Rhs> + Clone, Rhs: Zero + Clone,
+    where Lhs: Zero + Mul<Rhs> + Clone,
+          Rhs: Zero + Clone,
           <Lhs as Mul<Rhs>>::Output: Zero
 {
     type Output = Polynomial<<Lhs as Mul<Rhs>>::Output>;
@@ -270,16 +275,16 @@ impl<'a, 'b, Lhs, Rhs> Mul<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
         let slen = self.data.len();
         let olen = other.data.len();
         let prod = (0..slen + olen - 1)
-                       .map(|i| {
-                           let mut p = num::zero::<<Lhs as Mul<Rhs>>::Output>();
-                           let kstart = cmp::max(olen, i + 1) - olen;
-                           let kend = cmp::min(slen, i + 1);
-                           for k in kstart..kend {
-                               p = p + self.data[k].clone() * other.data[i - k].clone();
-                           }
-                           p
-                       })
-                       .collect();
+            .map(|i| {
+                let mut p = num::zero::<<Lhs as Mul<Rhs>>::Output>();
+                let kstart = cmp::max(olen, i + 1) - olen;
+                let kend = cmp::min(slen, i + 1);
+                for k in kstart..kend {
+                    p = p + self.data[k].clone() * other.data[i - k].clone();
+                }
+                p
+            })
+            .collect();
         Polynomial::new(prod)
     }
 }
