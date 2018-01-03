@@ -1,4 +1,5 @@
 language: rust
+dist: trusty
 sudo: false
 
 addons:
@@ -8,6 +9,11 @@ addons:
       - libelf-dev
       - libdw-dev
       - binutils-dev
+      - libiberty-dev
+
+env:
+  global:
+    - RUSTFLAGS="-C link-dead-code"
 
 rust:
   - nightly
