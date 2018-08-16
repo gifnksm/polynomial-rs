@@ -12,9 +12,9 @@
 
 extern crate num_traits;
 
-use std::{cmp, fmt};
+use num_traits::{One, Zero};
 use std::ops::{Add, Mul, Neg, Sub};
-use num_traits::{Zero, One};
+use std::{cmp, fmt};
 
 /// Polynomial expression
 #[derive(Eq, PartialEq, Clone, Debug)]
@@ -70,7 +70,8 @@ impl<T> Polynomial<T> {
 }
 
 impl<T> Polynomial<T>
-    where T: Zero + One + Eq + Neg<Output = T> + Ord + fmt::Display + Clone
+where
+    T: Zero + One + Eq + Neg<Output = T> + Ord + fmt::Display + Clone,
 {
     /// Pretty prints the polynomial.
     pub fn pretty(&self, x: &str) -> String {
@@ -117,8 +118,9 @@ impl<T> Polynomial<T>
 }
 
 impl<'a, T> Neg for Polynomial<T>
-    where T: Neg + Zero + Clone,
-          <T as Neg>::Output: Zero
+where
+    T: Neg + Zero + Clone,
+    <T as Neg>::Output: Zero,
 {
     type Output = Polynomial<<T as Neg>::Output>;
 
@@ -129,8 +131,9 @@ impl<'a, T> Neg for Polynomial<T>
 }
 
 impl<'a, T> Neg for &'a Polynomial<T>
-    where T: Neg + Zero + Clone,
-          <T as Neg>::Output: Zero
+where
+    T: Neg + Zero + Clone,
+    <T as Neg>::Output: Zero,
 {
     type Output = Polynomial<<T as Neg>::Output>;
 
@@ -143,8 +146,10 @@ impl<'a, T> Neg for &'a Polynomial<T>
 macro_rules! forward_val_val_binop {
     (impl $imp:ident, $method:ident) => {
         impl<Lhs, Rhs> $imp<Polynomial<Rhs>> for Polynomial<Lhs>
-            where Lhs: Zero + $imp<Rhs> + Clone, Rhs: Zero + Clone,
-                  <Lhs as $imp<Rhs>>::Output: Zero
+        where
+            Lhs: Zero + $imp<Rhs> + Clone,
+            Rhs: Zero + Clone,
+            <Lhs as $imp<Rhs>>::Output: Zero,
         {
             type Output = Polynomial<<Lhs as $imp<Rhs>>::Output>;
 
@@ -153,14 +158,16 @@ macro_rules! forward_val_val_binop {
                 (&self).$method(&other)
             }
         }
-    }
+    };
 }
 
 macro_rules! forward_ref_val_binop {
     (impl $imp:ident, $method:ident) => {
         impl<'a, Lhs, Rhs> $imp<Polynomial<Rhs>> for &'a Polynomial<Lhs>
-            where Lhs: Zero + $imp<Rhs> + Clone, Rhs: Zero + Clone,
-                  <Lhs as $imp<Rhs>>::Output: Zero
+        where
+            Lhs: Zero + $imp<Rhs> + Clone,
+            Rhs: Zero + Clone,
+            <Lhs as $imp<Rhs>>::Output: Zero,
         {
             type Output = Polynomial<<Lhs as $imp<Rhs>>::Output>;
 
@@ -169,14 +176,16 @@ macro_rules! forward_ref_val_binop {
                 self.$method(&other)
             }
         }
-    }
+    };
 }
 
 macro_rules! forward_val_ref_binop {
     (impl $imp:ident, $method:ident) => {
         impl<'a, Lhs, Rhs> $imp<&'a Polynomial<Rhs>> for Polynomial<Lhs>
-            where Lhs: Zero + $imp<Rhs> + Clone, Rhs: Zero + Clone,
-                  <Lhs as $imp<Rhs>>::Output: Zero
+        where
+            Lhs: Zero + $imp<Rhs> + Clone,
+            Rhs: Zero + Clone,
+            <Lhs as $imp<Rhs>>::Output: Zero,
         {
             type Output = Polynomial<<Lhs as $imp<Rhs>>::Output>;
 
@@ -185,7 +194,7 @@ macro_rules! forward_val_ref_binop {
                 (&self).$method(other)
             }
         }
-    }
+    };
 }
 
 macro_rules! forward_all_binop {
@@ -199,9 +208,10 @@ macro_rules! forward_all_binop {
 forward_all_binop!(impl Add, add);
 
 impl<'a, 'b, Lhs, Rhs> Add<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
-    where Lhs: Zero + Add<Rhs> + Clone,
-          Rhs: Zero + Clone,
-          <Lhs as Add<Rhs>>::Output: Zero
+where
+    Lhs: Zero + Add<Rhs> + Clone,
+    Rhs: Zero + Clone,
+    <Lhs as Add<Rhs>>::Output: Zero,
 {
     type Output = Polynomial<<Lhs as Add<Rhs>>::Output>;
 
@@ -231,9 +241,10 @@ impl<'a, 'b, Lhs, Rhs> Add<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
 forward_all_binop!(impl Sub, sub);
 
 impl<'a, 'b, Lhs, Rhs> Sub<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
-    where Lhs: Zero + Sub<Rhs> + Clone,
-          Rhs: Zero + Clone,
-          <Lhs as Sub<Rhs>>::Output: Zero
+where
+    Lhs: Zero + Sub<Rhs> + Clone,
+    Rhs: Zero + Clone,
+    <Lhs as Sub<Rhs>>::Output: Zero,
 {
     type Output = Polynomial<<Lhs as Sub<Rhs>>::Output>;
 
@@ -261,9 +272,10 @@ impl<'a, 'b, Lhs, Rhs> Sub<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
 forward_all_binop!(impl Mul, mul);
 
 impl<'a, 'b, Lhs, Rhs> Mul<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
-    where Lhs: Zero + Mul<Rhs> + Clone,
-          Rhs: Zero + Clone,
-          <Lhs as Mul<Rhs>>::Output: Zero
+where
+    Lhs: Zero + Mul<Rhs> + Clone,
+    Rhs: Zero + Clone,
+    <Lhs as Mul<Rhs>>::Output: Zero,
 {
     type Output = Polynomial<<Lhs as Mul<Rhs>>::Output>;
 
@@ -303,7 +315,9 @@ impl<T: Zero + Clone> Zero for Polynomial<T> {
 impl<T: Zero + One + Clone> One for Polynomial<T> {
     #[inline]
     fn one() -> Polynomial<T> {
-        Polynomial { data: vec![One::one()] }
+        Polynomial {
+            data: vec![One::one()],
+        }
     }
 }
 
