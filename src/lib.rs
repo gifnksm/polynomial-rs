@@ -39,7 +39,7 @@ impl<T: Zero> Polynomial<T> {
     }
 }
 
-impl<T: Zero + One + Clone> Polynomial<T> {
+impl<T: Zero + Mul<Output = T> + Clone> Polynomial<T> {
     /// Evaluates the polynomial value.
     ///
     /// ```rust
@@ -51,13 +51,11 @@ impl<T: Zero + One + Clone> Polynomial<T> {
     /// ```
     #[inline]
     pub fn eval(&self, x: T) -> T {
-        let mut sum: T = Zero::zero();
-        let mut x_n: T = One::one();
-        for n in self.data.iter() {
-            sum = sum + n.clone() * x_n.clone();
-            x_n = x_n * x.clone();
+        let mut result: T = Zero::zero();
+        for n in self.data.iter().rev() {
+            result = n.clone() + result * x.clone();
         }
-        sum
+        result
     }
 }
 
