@@ -13,7 +13,7 @@
 extern crate num_traits;
 
 use num_traits::{One, Zero};
-use std::ops::{Add, Mul, Neg, Sub};
+use std::ops::{Add, Mul, Neg, Sub, Div};
 use std::{cmp, fmt};
 
 /// Polynomial expression
@@ -36,6 +36,43 @@ impl<T: Zero> Polynomial<T> {
             let _ = data.pop();
         }
         Polynomial { data: data }
+    }
+}
+
+impl<T> Polynomial<T>
+where
+    T: One + Zero + Clone + Neg<Output=T> + Div<Output=T> + Mul<Output=T> + Sub<Output=T>
+{
+    /// Creates an optional `Polynomial` that fits a number of points.
+    /// 
+    /// Returns None if any two x-coordinates are the same.
+    ///
+    /// ```rust
+    ///     use polynomial::Polynomial;
+    ///     let poly = Polynomial::lagrange(&[1, 2, 3], &[10, 40, 90]).unwrap();
+    ///     println!("{}", poly.pretty("x"));
+    ///     assert_eq!("10*x^2", poly.pretty("x"));
+    /// ```
+    #[inline]
+    pub fn lagrange(xs: &[T], ys: &[T]) -> Option<Self> {
+        let mut res = Polynomial::new(vec![Zero::zero()]);
+        for ((i, x), y) in (0..).zip(xs.iter()).zip(ys.iter()) {
+            let mut p: Polynomial<T> = Polynomial::new(vec![T::one()]);
+            let mut denom = T::one();
+            for (j, x2) in (0..).zip(xs.iter()) {
+                if i != j {
+                    p = p * &Polynomial::new(vec![-x2.clone(), T::one()]);
+                    let diff = x.clone() - x2.clone();
+                    if diff.is_zero() {
+                        return None;
+                    }
+                    denom = denom * diff;
+                }
+            }
+            let scalar = y.clone() / denom;
+            res = res + p * &Polynomial::<T>::new(vec![scalar]);
+        }
+        Some(res)
     }
 }
 
@@ -414,5 +451,22 @@ mod tests {
         check(&[-1, 0, 0, -1], "-1-x^3");
         check(&[-1, 1, 0, -1], "-1+x-x^3");
         check(&[-1, 1, -1, -1], "-1+x-x^2-x^3");
+    }
+
+    #[test]
+    fn lagrange() {
+        fn check(xs: &[f64], ys: &[f64]) {
+            let p = Polynomial::lagrange(&xs, &ys);
+            assert_ne!(p, None);
+            if let Some(p) = p {
+                for (x, y) in xs.iter().zip(ys) {
+                    assert_eq!((&p.eval(x.clone())- y).abs() < 1e-9, true);
+                }
+            }
+        }
+        check(&[1., 2., 3.], &[10., 40., 90.]);
+        check(&[-1., 0., 1., 2.], &[-1000., 0., 1000., 8000.]);
+        check(&[1., 9., 10., 11.], &[1., 2., 3., 4.]);
+        assert_eq!(Polynomial::lagrange(&[1., 9., 9., 11.], &[1., 2., 3., 4.]), None);
     }
 }
