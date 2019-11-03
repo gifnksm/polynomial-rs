@@ -12,8 +12,8 @@
 
 extern crate num_traits;
 
-use num_traits::{One, Zero};
-use std::ops::{Add, Mul, Neg, Sub, Div};
+use num_traits::{FromPrimitive, One, Zero};
+use std::ops::{Add, Div, Mul, Neg, Sub};
 use std::{cmp, fmt};
 
 /// Polynomial expression
@@ -41,10 +41,10 @@ impl<T: Zero> Polynomial<T> {
 
 impl<T> Polynomial<T>
 where
-    T: One + Zero + Clone + Neg<Output=T> + Div<Output=T> + Mul<Output=T> + Sub<Output=T>
+    T: One + Zero + Clone + Neg<Output = T> + Div<Output = T> + Mul<Output = T> + Sub<Output = T>,
 {
     /// Creates an optional `Polynomial` that fits a number of points.
-    /// 
+    ///
     /// Returns None if any two x-coordinates are the same.
     ///
     /// ```rust
@@ -73,6 +73,53 @@ where
             res = res + p * &Polynomial::<T>::new(vec![scalar]);
         }
         Some(res)
+    }
+}
+
+impl<T> Polynomial<T>
+where
+    T: One
+        + Zero
+        + Clone
+        + Neg<Output = T>
+        + Div<Output = T>
+        + Mul<Output = T>
+        + Sub<Output = T>
+        + FromPrimitive,
+{
+    /// Chebyshev approximation fits a function to a polynomial over a range of values.
+    ///
+    /// https://en.wikipedia.org/wiki/Approximation_theory#Chebyshev_approximation
+    ///
+    /// This attempts to minimise the maximum error.
+    ///
+    /// ```rust
+    ///     use polynomial::Polynomial;
+    ///     use std::f64::consts::PI;
+    ///     let p = Polynomial::chebyshev(&f64::sin, 7, -PI/4., PI/4.).unwrap();
+    ///     assert!((p.eval(0.) - (0.0_f64).sin()).abs() < 0.0001);
+    ///     assert!((p.eval(0.1) - (0.1_f64).sin()).abs() < 0.0001);
+    ///     assert!((p.eval(-0.1) - (-0.1_f64).sin()).abs() < 0.0001);
+    /// ```
+    #[inline]
+    pub fn chebyshev<F: Fn(T) -> T>(f: &F, n: usize, xmin: f64, xmax: f64) -> Option<Self> {
+        if n < 1 || xmin >= xmax {
+            return None;
+        }
+
+        let mut xs = Vec::new();
+        for i in 0..n {
+            use std::f64::consts::PI;
+            let x = T::from_f64(
+                (xmax + xmin) * 0.5
+                    + (xmin - xmax) * 0.5 * ((2 * i + 1) as f64 * PI / (2 * n) as f64).cos(),
+            )
+            .unwrap();
+            xs.push(x);
+        }
+
+        let ys: Vec<T> = xs.iter().map(|x| f(x.clone())).collect();
+        Polynomial::lagrange(&xs[0..], &ys[0..])
     }
 }
 
@@ -455,18 +502,50 @@ mod tests {
 
     #[test]
     fn lagrange() {
+        // Evaluate the lagrange polynomial at the x coordinates.
+        // The error should be close to zero.
         fn check(xs: &[f64], ys: &[f64]) {
-            let p = Polynomial::lagrange(&xs, &ys);
-            assert_ne!(p, None);
-            if let Some(p) = p {
-                for (x, y) in xs.iter().zip(ys) {
-                    assert_eq!((&p.eval(x.clone())- y).abs() < 1e-9, true);
-                }
+            let p = Polynomial::lagrange(&xs, &ys).unwrap();
+            for (x, y) in xs.iter().zip(ys) {
+                assert!((&p.eval(x.clone()) - y).abs() < 1e-9);
             }
         }
+
+        // Squares
         check(&[1., 2., 3.], &[10., 40., 90.]);
+        // Cubes
         check(&[-1., 0., 1., 2.], &[-1000., 0., 1000., 8000.]);
+        // Non linear x.
         check(&[1., 9., 10., 11.], &[1., 2., 3., 4.]);
-        assert_eq!(Polynomial::lagrange(&[1., 9., 9., 11.], &[1., 2., 3., 4.]), None);
+        // Test double x failure case.
+        assert_eq!(
+            Polynomial::lagrange(&[1., 9., 9., 11.], &[1., 2., 3., 4.]),
+            None
+        );
+    }
+
+    #[test]
+    fn chebyshev() {
+        // Construct a Chebyshev approximation for a function
+        // and evaulate it at 100 points.
+        fn check<F: Fn(f64) -> f64>(f: &F, n: usize, xmin: f64, xmax: f64) {
+            let p = Polynomial::chebyshev(f, n, xmin, xmax).unwrap();
+            for i in 0..=100 {
+                let x = xmin + (i as f64) * ((xmax - xmin) / 100.0);
+                let diff = (f(x) - p.eval(x)).abs();
+                assert!(diff < 0.0001);
+            }
+        }
+
+        // Approximate some common functions.
+        use std::f64::consts::PI;
+        check(&f64::sin, 7, -PI / 2., PI / 2.);
+        check(&f64::cos, 7, 0., PI / 4.);
+
+        // Test n >= 1 condition
+        assert!(Polynomial::chebyshev(&f64::exp, 0, 0., 1.) == None);
+
+        // Test xmax > xmin condition
+        assert!(Polynomial::chebyshev(&f64::ln, 1, 1., 0.) == None);
     }
 }
