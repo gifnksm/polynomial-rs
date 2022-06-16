@@ -177,19 +177,17 @@ where
                 } else if (*n) == -one.clone() {
                     format!("-{}", x)
                 } else {
-                    format!("{}*{}", n.to_string(), x)
+                    format!("{}*{}", n, x)
                 }
+            } else if (*n) == one {
+                format!("{}^{}", x, i)
+            } else if (*n) == -one.clone() {
+                format!("-{}^{}", x, i)
             } else {
-                if (*n) == one {
-                    format!("{}^{}", x, i)
-                } else if (*n) == -one.clone() {
-                    format!("-{}^{}", x, i)
-                } else {
-                    format!("{}*{}^{}", n.to_string(), x, i)
-                }
+                format!("{}*{}^{}", n, x, i)
             };
 
-            if s.len() > 0 && (*n) > Zero::zero() {
+            if !s.is_empty() && (*n) > Zero::zero() {
                 s.push("+".to_string());
             }
             s.push(term);
@@ -503,9 +501,9 @@ mod tests {
         // Evaluate the lagrange polynomial at the x coordinates.
         // The error should be close to zero.
         fn check(xs: &[f64], ys: &[f64]) {
-            let p = Polynomial::lagrange(&xs, &ys).unwrap();
+            let p = Polynomial::lagrange(xs, ys).unwrap();
             for (x, y) in xs.iter().zip(ys) {
-                assert!((&p.eval(x.clone()) - y).abs() < 1e-9);
+                assert!((p.eval(*x) - y).abs() < 1e-9);
             }
         }
 

@@ -1,4 +1,4 @@
-# polynomial-rs [![Build Status](https://travis-ci.org/gifnksm/polynomial-rs.svg)](https://travis-ci.org/gifnksm/polynomial-rs) [![Coverage Status](https://coveralls.io/repos/gifnksm/polynomial-rs/badge.svg?branch=master&service=github)](https://coveralls.io/github/gifnksm/polynomial-rs?branch=master)
+# polynomial-rs [![Coverage Status](https://coveralls.io/repos/gifnksm/polynomial-rs/badge.svg?branch=master&service=github)](https://coveralls.io/github/gifnksm/polynomial-rs?branch=master)
 
 Manipulations and data types that represent polynomial.
 
