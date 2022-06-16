@@ -1,8 +1,8 @@
-# polynomial-rs [![Coverage Status](https://coveralls.io/repos/gifnksm/polynomial-rs/badge.svg?branch=master&service=github)](https://coveralls.io/github/gifnksm/polynomial-rs?branch=master)
+# polynomial-rs
 
 Manipulations and data types that represent polynomial.
 
-[Documentation](http://gifnksm.github.io/polynomial-rs)
+[Documentation](https://docs.rs/polynomial/latest/polynomial/)
 
 ## How to use?
 
