@@ -31,11 +31,11 @@ impl<T: Zero> Polynomial<T> {
     /// assert_eq!("1+2*x+3*x^2", poly.pretty("x"));
     /// ```
     #[inline]
-    pub fn new(mut data: Vec<T>) -> Polynomial<T> {
+    pub fn new(mut data: Vec<T>) -> Self {
         while let Some(true) = data.last().map(|x| x.is_zero()) {
             let _ = data.pop();
         }
-        Polynomial { data: data }
+        Self { data }
     }
 }
 
@@ -123,7 +123,7 @@ where
     }
 }
 
-impl<T: Zero + One + Clone> Polynomial<T> {
+impl<T: Zero + Mul<Output = T> + Clone> Polynomial<T> {
     /// Evaluates the polynomial value.
     ///
     /// ```rust
@@ -135,13 +135,11 @@ impl<T: Zero + One + Clone> Polynomial<T> {
     /// ```
     #[inline]
     pub fn eval(&self, x: T) -> T {
-        let mut sum: T = Zero::zero();
-        let mut x_n: T = One::one();
-        for n in self.data.iter() {
-            sum = sum + n.clone() * x_n.clone();
-            x_n = x_n * x.clone();
+        let mut result: T = Zero::zero();
+        for n in self.data.iter().rev() {
+            result = n.clone() + result * x.clone();
         }
-        sum
+        result
     }
 }
 
@@ -387,8 +385,8 @@ where
 
 impl<T: Zero + Clone> Zero for Polynomial<T> {
     #[inline]
-    fn zero() -> Polynomial<T> {
-        Polynomial { data: vec![] }
+    fn zero() -> Self {
+        Self { data: vec![] }
     }
     #[inline]
     fn is_zero(&self) -> bool {
@@ -398,8 +396,8 @@ impl<T: Zero + Clone> Zero for Polynomial<T> {
 
 impl<T: Zero + One + Clone> One for Polynomial<T> {
     #[inline]
-    fn one() -> Polynomial<T> {
-        Polynomial {
+    fn one() -> Self {
+        Self {
             data: vec![One::one()],
         }
     }
