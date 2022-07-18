@@ -1,8 +1,11 @@
 # polynomial-rs
 
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![crates.io](https://img.shields.io/crates/v/polynomial.svg)](https://crates.io/crates/polynomial)
+[![docs.rs](https://img.shields.io/docsrs/polynomial/latest)](https://docs.rs/polynomial/latest/)
+[![rust 1.56.1+ badge](https://img.shields.io/badge/rust-1.56.1+-93450a.svg)](https://doc.rust-lang.org/cargo/reference/manifest.html#the-rust-version-field)
 [![Rust CI](https://github.com/gifnksm/polynomial-rs/actions/workflows/rust-ci.yml/badge.svg)](https://github.com/gifnksm/polynomial-rs/actions/workflows/rust-ci.yml)
 [![codecov](https://codecov.io/gh/gifnksm/polynomial-rs/branch/master/graph/badge.svg?token=0RxeiNjQNM)](https://codecov.io/gh/gifnksm/polynomial-rs)
-[![crates.io](https://img.shields.io/crates/v/polynomial.svg)](https://crates.io/crates/polynomial)
 
 Manipulations and data types that represent polynomial.
 
@@ -16,3 +19,11 @@ Add this to your `Cargo.toml`:
 [dependencies]
 polynomial = "0.1"
 ```
+
+## Minimum supported Rust version (MSRV)
+
+The minimum supported Rust version is **Rust 1.56.1**.
+At least the last 3 versions of stable Rust are supported at any given time.
+
+While a crate is pre-release status (0.x.x) it may have its MSRV bumped in a patch release.
+Once a crate has reached 1.x, any MSRV bump will be accompanied with a new minor version.
