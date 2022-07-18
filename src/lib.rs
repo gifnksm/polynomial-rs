@@ -197,7 +197,7 @@ where
     }
 }
 
-impl<'a, T> Neg for Polynomial<T>
+impl<T> Neg for Polynomial<T>
 where
     T: Neg + Zero + Clone,
     <T as Neg>::Output: Zero,
