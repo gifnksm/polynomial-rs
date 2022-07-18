@@ -10,6 +10,9 @@ repository = "https://github.com/gifnksm/polynomial-rs"
 description = "Manipulations and data types that represent polynomial."
 documentation = "https://gifnksm.github.io/polynomial-rs"
 
+[badges]
+maintenance = { status = "passively-maintained" }
+
 [dependencies]
 num-traits = "0.2"
 
