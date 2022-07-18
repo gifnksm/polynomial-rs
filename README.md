@@ -17,7 +17,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-polynomial = "0.1"
+polynomial = "0.2.0"
 ```
 
 ## Minimum supported Rust version (MSRV)
