@@ -1,5 +1,4 @@
 [package]
-
 name = "polynomial"
 version = "0.1.2"
 edition = "2021"
@@ -13,3 +12,8 @@ documentation = "https://gifnksm.github.io/polynomial-rs"
 
 [dependencies]
 num-traits = "0.2"
+
+[package.metadata.release]
+pre-release-replacements = [
+    { file = "README.md", search = "polynomial = \"[0-9\\.]+\"", replace = "{{crate_name}} = \"{{version}}\"" }
+]
