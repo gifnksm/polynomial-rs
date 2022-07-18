@@ -10,8 +10,6 @@
 #![warn(unused_qualifications)]
 #![warn(unused_results)]
 
-extern crate num_traits;
-
 use num_traits::{FromPrimitive, One, Zero};
 use std::ops::{Add, Div, Mul, Neg, Sub};
 use std::{cmp, fmt};
