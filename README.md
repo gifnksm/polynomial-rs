@@ -1,6 +1,6 @@
 # polynomial-rs
 
-[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![license](https://img.shields.io/crates/l/polynomial.svg)](LICENSE)
 [![crates.io](https://img.shields.io/crates/v/polynomial.svg)](https://crates.io/crates/polynomial)
 [![docs.rs](https://img.shields.io/docsrs/polynomial/latest)](https://docs.rs/polynomial/latest/)
 [![rust 1.56.1+ badge](https://img.shields.io/badge/rust-1.56.1+-93450a.svg)](https://doc.rust-lang.org/cargo/reference/manifest.html#the-rust-version-field)
