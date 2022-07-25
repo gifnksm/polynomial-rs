@@ -1,4 +1,4 @@
-//! Manipulations and data types that represent polynomial.
+//! A library for manipulating polynomials.
 
 #![warn(bad_style)]
 #![warn(missing_docs)]
@@ -14,16 +14,16 @@ use num_traits::{FromPrimitive, One, Zero};
 use std::ops::{Add, Div, Mul, Neg, Sub};
 use std::{cmp, fmt};
 
-/// Polynomial expression
+/// A polynomial.
 #[derive(Eq, PartialEq, Clone, Debug)]
 pub struct Polynomial<T> {
     data: Vec<T>,
 }
 
 impl<T: Zero> Polynomial<T> {
-    /// Creates new `Polynomial`.
+    /// Creates a new `Polynomial` from a `Vec` of coefficients.
     ///
-    /// ```rust
+    /// ```
     /// use polynomial::Polynomial;
     /// let poly = Polynomial::new(vec![1, 2, 3]);
     /// assert_eq!("1+2*x+3*x^2", poly.pretty("x"));
@@ -41,15 +41,15 @@ impl<T> Polynomial<T>
 where
     T: One + Zero + Clone + Neg<Output = T> + Div<Output = T> + Mul<Output = T> + Sub<Output = T>,
 {
-    /// Creates an optional `Polynomial` that fits a number of points.
+    /// Creates the Lagrange polynomial that fits a number of points.
     ///
     /// Returns None if any two x-coordinates are the same.
     ///
-    /// ```rust
-    ///     use polynomial::Polynomial;
-    ///     let poly = Polynomial::lagrange(&[1, 2, 3], &[10, 40, 90]).unwrap();
-    ///     println!("{}", poly.pretty("x"));
-    ///     assert_eq!("10*x^2", poly.pretty("x"));
+    /// ```
+    /// use polynomial::Polynomial;
+    /// let poly = Polynomial::lagrange(&[1, 2, 3], &[10, 40, 90]).unwrap();
+    /// println!("{}", poly.pretty("x"));
+    /// assert_eq!("10*x^2", poly.pretty("x"));
     /// ```
     #[inline]
     pub fn lagrange(xs: &[T], ys: &[T]) -> Option<Self> {
@@ -91,13 +91,13 @@ where
     ///
     /// This attempts to minimise the maximum error.
     ///
-    /// ```rust
-    ///     use polynomial::Polynomial;
-    ///     use std::f64::consts::PI;
-    ///     let p = Polynomial::chebyshev(&f64::sin, 7, -PI/4., PI/4.).unwrap();
-    ///     assert!((p.eval(0.) - (0.0_f64).sin()).abs() < 0.0001);
-    ///     assert!((p.eval(0.1) - (0.1_f64).sin()).abs() < 0.0001);
-    ///     assert!((p.eval(-0.1) - (-0.1_f64).sin()).abs() < 0.0001);
+    /// ```
+    /// use polynomial::Polynomial;
+    /// use std::f64::consts::PI;
+    /// let p = Polynomial::chebyshev(&f64::sin, 7, -PI/4., PI/4.).unwrap();
+    /// assert!((p.eval(0.) - (0.0_f64).sin()).abs() < 0.0001);
+    /// assert!((p.eval(0.1) - (0.1_f64).sin()).abs() < 0.0001);
+    /// assert!((p.eval(-0.1) - (-0.1_f64).sin()).abs() < 0.0001);
     /// ```
     #[inline]
     pub fn chebyshev<F: Fn(T) -> T>(f: &F, n: usize, xmin: f64, xmax: f64) -> Option<Self> {
@@ -122,9 +122,9 @@ where
 }
 
 impl<T: Zero + Mul<Output = T> + Clone> Polynomial<T> {
-    /// Evaluates the polynomial value.
+    /// Evaluates the polynomial at a point.
     ///
-    /// ```rust
+    /// ```
     /// use polynomial::Polynomial;
     /// let poly = Polynomial::new(vec![1, 2, 3]);
     /// assert_eq!(1, poly.eval(0));
