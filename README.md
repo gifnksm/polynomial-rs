@@ -8,7 +8,7 @@
 [![Rust CI](https://github.com/gifnksm/polynomial-rs/actions/workflows/rust-ci.yml/badge.svg)](https://github.com/gifnksm/polynomial-rs/actions/workflows/rust-ci.yml)
 [![codecov](https://codecov.io/gh/gifnksm/polynomial-rs/branch/master/graph/badge.svg?token=0RxeiNjQNM)](https://codecov.io/gh/gifnksm/polynomial-rs)
 
-Manipulations and data types that represent polynomial.
+A library for manipulating polynomials.
 
 [Documentation](https://docs.rs/polynomial/latest/polynomial/)
 
