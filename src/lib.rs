@@ -23,6 +23,8 @@ pub struct Polynomial<T> {
 impl<T: Zero> Polynomial<T> {
     /// Creates a new `Polynomial` from a `Vec` of coefficients.
     ///
+    /// # Examples
+    ///
     /// ```
     /// use polynomial::Polynomial;
     /// let poly = Polynomial::new(vec![1, 2, 3]);
@@ -41,9 +43,13 @@ impl<T> Polynomial<T>
 where
     T: One + Zero + Clone + Neg<Output = T> + Div<Output = T> + Mul<Output = T> + Sub<Output = T>,
 {
-    /// Creates the Lagrange polynomial that fits a number of points.
+    /// Creates the [Lagrange polynomial] that fits a number of points.
     ///
-    /// Returns None if any two x-coordinates are the same.
+    /// [Lagrange polynomial]: https://en.wikipedia.org/wiki/Lagrange_polynomial
+    ///
+    /// Returns `None` if any two x-coordinates are the same.
+    ///
+    /// # Examples
     ///
     /// ```
     /// use polynomial::Polynomial;
@@ -85,11 +91,15 @@ where
         + Sub<Output = T>
         + FromPrimitive,
 {
-    /// Chebyshev approximation fits a function to a polynomial over a range of values.
+    /// [Chebyshev approximation] fits a function to a polynomial over a range of values.
     ///
-    /// https://en.wikipedia.org/wiki/Approximation_theory#Chebyshev_approximation
+    /// [Chebyshev approximation]: https://en.wikipedia.org/wiki/Approximation_theory#Chebyshev_approximation
     ///
-    /// This attempts to minimise the maximum error.
+    /// This attempts to minimize the maximum error.
+    ///
+    /// Retrurns `None` if `n < 1` or `xmin >= xmax`.
+    ///
+    /// # Examples
     ///
     /// ```
     /// use polynomial::Polynomial;
@@ -123,6 +133,8 @@ where
 
 impl<T: Zero + Mul<Output = T> + Clone> Polynomial<T> {
     /// Evaluates the polynomial at a point.
+    ///
+    /// # Examples
     ///
     /// ```
     /// use polynomial::Polynomial;
