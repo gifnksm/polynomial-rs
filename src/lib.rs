@@ -16,6 +16,7 @@ use std::{cmp, fmt};
 
 /// A polynomial.
 #[derive(Eq, PartialEq, Clone, Debug)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Polynomial<T> {
     data: Vec<T>,
 }
