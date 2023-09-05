@@ -550,9 +550,9 @@ mod tests {
         check(&f64::cos, 7, 0., PI / 4.);
 
         // Test n >= 1 condition
-        assert!(Polynomial::chebyshev(&f64::exp, 0, 0., 1.) == None);
+        assert!(Polynomial::chebyshev(&f64::exp, 0, 0., 1.).is_none());
 
         // Test xmax > xmin condition
-        assert!(Polynomial::chebyshev(&f64::ln, 1, 1., 0.) == None);
+        assert!(Polynomial::chebyshev(&f64::ln, 1, 1., 0.).is_none());
     }
 }
