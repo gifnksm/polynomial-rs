@@ -21,6 +21,14 @@ Add this to your `Cargo.toml`:
 polynomial = "0.2.5"
 ```
 
+## no_std environments
+
+The library can be used in a no_std environment, so long as a global allocator is present. Simply add the `default-features = false` attribute to `Cargo.toml`:
+```toml
+[dependencies]
+polynomial = {version = "0.2.5", default-features = false}
+```
+
 ## Minimum supported Rust version (MSRV)
 
 The minimum supported Rust version is **Rust 1.70.0**.
