@@ -25,6 +25,9 @@ use alloc::{
     vec::Vec,
 };
 
+#[cfg(not(feature = "std"))]
+use num_traits::Float;
+
 /// A polynomial.
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
