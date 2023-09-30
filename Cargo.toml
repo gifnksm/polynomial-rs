@@ -25,5 +25,5 @@ libm = ["num-traits/libm"]
 [package.metadata.release]
 pre-release-replacements = [
     { file = "README.md", search = "polynomial = \"[0-9\\.]+\"", replace = "{{crate_name}} = \"{{version}}\"" },
-    { file = "README.md", search = "polynomial = \\{version = \"[0-9\\.]+\"", replace = "{{crate_name}} = {version=\"{{version}}\"" }
+    { file = "README.md", search = "polynomial = \\{version = \"[0-9\\.]+\"", replace = "{{crate_name}} = {version = \"{{version}}\"" }
 ]
