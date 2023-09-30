@@ -23,10 +23,19 @@ polynomial = "0.2.5"
 
 ## no_std environments
 
-The library can be used in a no_std environment, so long as a global allocator is present. Simply add the `default-features = false` attribute to `Cargo.toml`:
+The library can be used in a `no_std` environment, so long as a global allocator is present.
+Simply add the `default-features = false` attribute to `Cargo.toml`:
+
 ```toml
 [dependencies]
 polynomial = {version = "0.2.5", default-features = false}
+```
+
+If you want to use floating point numbers in a `no_std` environment, you can enable the `libm` feature:
+
+```toml
+[dependencies]
+polynomial = {version = "0.2.5", default-features = false, features = ["libm"]}
 ```
 
 ## Minimum supported Rust version (MSRV)

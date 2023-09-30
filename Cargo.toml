@@ -13,15 +13,17 @@ description = "A library for manipulating polynomials"
 maintenance = { status = "passively-maintained" }
 
 [dependencies]
-num-traits = { version = "0.2", default-features = false, features = ["libm"] }
+num-traits = { version = "0.2", default-features = false }
 serde = { version = "1.0", features = ["derive"], optional = true }
 
 [features]
 serde = ["dep:serde"]
 default = ["std"]
 std = ["num-traits/std"]
+libm = ["num-traits/libm"]
 
 [package.metadata.release]
 pre-release-replacements = [
-    { file = "README.md", search = "polynomial = \"[0-9\\.]+\"", replace = "{{crate_name}} = \"{{version}}\"" }
+    { file = "README.md", search = "polynomial = \"[0-9\\.]+\"", replace = "{{crate_name}} = \"{{version}}\"" },
+    { file = "README.md", search = "polynomial = \\{version = \"[0-9\\.]+\"", replace = "{{crate_name}} = {version=\"{{version}}\"" }
 ]
