@@ -18,7 +18,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-polynomial = "0.2.5"
+polynomial = "0.2.6"
 ```
 
 ## no_std environments
@@ -28,14 +28,14 @@ Simply add the `default-features = false` attribute to `Cargo.toml`:
 
 ```toml
 [dependencies]
-polynomial = {version = "0.2.5", default-features = false}
+polynomial = {version = "0.2.6", default-features = false}
 ```
 
 If you want to use floating point numbers in a `no_std` environment, you can enable the `libm` feature:
 
 ```toml
 [dependencies]
-polynomial = {version = "0.2.5", default-features = false, features = ["libm"]}
+polynomial = {version = "0.2.6", default-features = false, features = ["libm"]}
 ```
 
 ## Minimum supported Rust version (MSRV)
