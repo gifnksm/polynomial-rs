@@ -11,12 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions-rs/toolchain@v1
+      - uses: dtolnay/rust-toolchain@v1
         with:
-            toolchain: stable
-            profile: minimal
-            components: rustfmt
-            override: true
+          toolchain: stable
+          components: rustfmt
       - name: rustfmt-check
         run: cargo fmt --all --check
 
@@ -32,39 +30,24 @@ jobs:
           - "-p polynomial --no-default-features --features=libm"
     steps:
       - uses: actions/checkout@v4
-      - name: Check workflow permissions
-        id: check_permissions
-        uses: scherermichael-oss/action-has-permission@1.0.6
+      - uses: dtolnay/rust-toolchain@v1
         with:
-          required-permission: write
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Run clippy action to produce annotations
-        uses: actions-rs/clippy-check@v1
-        if: ${{ steps.check_permissions.outputs.has-permission }}
+          toolchain: stable
+          components: clippy
+      - uses: giraffate/clippy-action@v1
         with:
-          # GitHub displays the clippy job and its results as separate entries
-          name: Clippy (stable) Results
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: ${{ matrix.feature_flags }} --all-targets -- -D warnings
-      - uses: actions-rs/toolchain@v1
-        with:
-            toolchain: stable
-            profile: minimal
-            components: clippy
-            override: true
-      - name: Run clippy manually without annotations
-        if: ${{ !steps.check_permissions.outputs.has-permission }}
-        run: cargo clippy ${{ matrix.feature_flags }} --all-targets -- -D warnings
+          reporter: 'github-pr-review'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          clippy_flags: -- -Dwarnings
 
   security_audit:
     name: Security Audit
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions-rs/audit-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions-rust-lang/audit@v1
 
   test:
     name: Test
@@ -81,11 +64,9 @@ jobs:
           - "-p polynomial --no-default-features --features=libm"
     steps:
       - uses: actions/checkout@v4
-      - uses: actions-rs/toolchain@v1
+      - uses: dtolnay/rust-toolchain@v1
         with:
-            toolchain: ${{ matrix.rust }}
-            profile: minimal
-            override: true
+          toolchain: ${{ matrix.rust }}
       - name: cargo test
         run: cargo test --all-targets ${{ matrix.feature_flags }}
 
@@ -104,11 +85,9 @@ jobs:
           - "-p polynomial --no-default-features --features=libm"
     steps:
       - uses: actions/checkout@v4
-      - uses: actions-rs/toolchain@v1
+      - uses: dtolnay/rust-toolchain@v1
         with:
-            toolchain: ${{ matrix.rust }}
-            profile: minimal
-            override: true
+          toolchain: ${{ matrix.rust }}
       - name: cargo build
         run: cargo build --all-targets ${{ matrix.feature_flags}}
 
@@ -124,11 +103,9 @@ jobs:
           - "-p polynomial --no-default-features --features=libm"
     steps:
       - uses: actions/checkout@v4
-      - uses: actions-rs/toolchain@v1
+      - uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: stable
-          profile: minimal
-          override: true
           components: llvm-tools-preview
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
