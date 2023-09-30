@@ -25,9 +25,6 @@ use alloc::{
     vec::Vec,
 };
 
-#[cfg(not(feature = "std"))]
-use num_traits::Float;
-
 /// A polynomial.
 #[derive(Eq, PartialEq, Clone, Debug)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -125,7 +122,13 @@ where
     /// assert!((p.eval(-0.1) - (-0.1_f64).sin()).abs() < 0.0001);
     /// ```
     #[inline]
+    #[cfg(any(feature = "std", feature = "libm"))]
     pub fn chebyshev<F: Fn(T) -> T>(f: &F, n: usize, xmin: f64, xmax: f64) -> Option<Self> {
+        #[cfg(feature = "std")]
+        let cos = f64::cos;
+        #[cfg(not(feature = "std"))]
+        let cos = num_traits::Float::cos;
+
         if n < 1 || xmin >= xmax {
             return None;
         }
@@ -135,7 +138,7 @@ where
             use core::f64::consts::PI;
             let x = T::from_f64(
                 (xmax + xmin) * 0.5
-                    + (xmin - xmax) * 0.5 * ((2 * i + 1) as f64 * PI / (2 * n) as f64).cos(),
+                    + (xmin - xmax) * 0.5 * cos((2 * i + 1) as f64 * PI / (2 * n) as f64),
             )
             .unwrap();
             xs.push(x);
@@ -552,6 +555,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(any(feature = "std", feature = "libm"))]
     fn chebyshev() {
         // Construct a Chebyshev approximation for a function
         // and evaulate it at 100 points.

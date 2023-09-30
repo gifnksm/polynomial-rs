@@ -29,6 +29,7 @@ jobs:
           - "--workspace --all-features"
           - "--workspace --no-default-features"
           - "-p polynomial --no-default-features --features=std"
+          - "-p polynomial --no-default-features --features=libm"
     steps:
       - uses: actions/checkout@v4
       - name: Check workflow permissions
@@ -77,6 +78,7 @@ jobs:
           - "--workspace --all-features"
           - "--workspace --no-default-features"
           - "-p polynomial --no-default-features --features=std"
+          - "-p polynomial --no-default-features --features=libm"
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rs/toolchain@v1
@@ -99,6 +101,7 @@ jobs:
           - "--workspace --all-features"
           - "--workspace --no-default-features"
           - "-p polynomial --no-default-features --features=std"
+          - "-p polynomial --no-default-features --features=libm"
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rs/toolchain@v1
@@ -118,6 +121,7 @@ jobs:
           - "--workspace --all-features"
           - "--workspace --no-default-features"
           - "-p polynomial --no-default-features --features=std"
+          - "-p polynomial --no-default-features --features=libm"
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rs/toolchain@v1
