@@ -23,6 +23,12 @@ jobs:
   clippy_check:
     name: Clippy Check
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        feature_flags:
+          - "--workspace --all-features"
+          - "--workspace --no-default-features"
+          - "-p polynomial --no-default-features --features=std"
     steps:
       - uses: actions/checkout@v4
       - name: Check workflow permissions
@@ -39,7 +45,7 @@ jobs:
           # GitHub displays the clippy job and its results as separate entries
           name: Clippy (stable) Results
           token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-features --all-targets -- -D warnings
+          args: ${{ matrix.feature_flags }} --all-targets -- -D warnings
       - uses: actions-rs/toolchain@v1
         with:
             toolchain: stable
@@ -48,7 +54,7 @@ jobs:
             override: true
       - name: Run clippy manually without annotations
         if: ${{ !steps.check_permissions.outputs.has-permission }}
-        run: cargo clippy --all-features --all-targets -- -D warnings
+        run: cargo clippy ${{ matrix.feature_flags }} --all-targets -- -D warnings
 
   security_audit:
     name: Security Audit
@@ -67,6 +73,10 @@ jobs:
         rust:
           - stable
           - 1.70.0
+        feature_flags:
+          - "--workspace --all-features"
+          - "--workspace --no-default-features"
+          - "-p polynomial --no-default-features --features=std"
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rs/toolchain@v1
@@ -75,7 +85,7 @@ jobs:
             profile: minimal
             override: true
       - name: cargo test
-        run: cargo test --workspace --all-targets --all-features
+        run: cargo test --all-targets ${{ matrix.feature_flags }}
 
   build:
     name: Build
@@ -85,6 +95,10 @@ jobs:
         rust:
           - stable
           - 1.70.0
+        feature_flags:
+          - "--workspace --all-features"
+          - "--workspace --no-default-features"
+          - "-p polynomial --no-default-features --features=std"
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rs/toolchain@v1
@@ -93,11 +107,17 @@ jobs:
             profile: minimal
             override: true
       - name: cargo build
-        run: cargo build --workspace --all-targets --all-features
+        run: cargo build --all-targets ${{ matrix.feature_flags}}
 
   coverage:
     name: Code coverage
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        feature_flags:
+          - "--workspace --all-features"
+          - "--workspace --no-default-features"
+          - "-p polynomial --no-default-features --features=std"
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rs/toolchain@v1
@@ -109,7 +129,7 @@ jobs:
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
       - name: Generate code coverage
-        run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
+        run: cargo llvm-cov ${{ matrix.feature_flags }} --lcov --output-path lcov.info
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
