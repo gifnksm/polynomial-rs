@@ -13,11 +13,13 @@ description = "A library for manipulating polynomials"
 maintenance = { status = "passively-maintained" }
 
 [dependencies]
-num-traits = "0.2"
+num-traits = { version = "0.2", default-features = false, features = ["libm"] }
 serde = { version = "1.0", features = ["derive"], optional = true }
 
 [features]
 serde = ["dep:serde"]
+default = ["std"]
+std = ["num-traits/std"]
 
 [package.metadata.release]
 pre-release-replacements = [

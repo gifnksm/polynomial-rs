@@ -1,5 +1,5 @@
 //! A library for manipulating polynomials.
-
+#![cfg_attr(not(feature = "std"), no_std)]
 #![warn(bad_style)]
 #![warn(missing_docs)]
 #![warn(trivial_casts)]
@@ -10,9 +10,23 @@
 #![warn(unused_qualifications)]
 #![warn(unused_results)]
 
+use core::ops::{Add, Div, Mul, Neg, Sub};
+use core::{cmp, fmt};
 use num_traits::{FromPrimitive, One, Zero};
-use std::ops::{Add, Div, Mul, Neg, Sub};
-use std::{cmp, fmt};
+
+#[cfg(not(feature = "std"))]
+extern crate alloc;
+
+#[cfg(not(feature = "std"))]
+use alloc::{
+    format,
+    string::{String, ToString},
+    vec,
+    vec::Vec,
+};
+
+#[cfg(not(feature = "std"))]
+use num_traits::Float;
 
 /// A polynomial.
 #[derive(Eq, PartialEq, Clone, Debug)]
@@ -118,7 +132,7 @@ where
 
         let mut xs = Vec::new();
         for i in 0..n {
-            use std::f64::consts::PI;
+            use core::f64::consts::PI;
             let x = T::from_f64(
                 (xmax + xmin) * 0.5
                     + (xmin - xmax) * 0.5 * ((2 * i + 1) as f64 * PI / (2 * n) as f64).cos(),
@@ -414,6 +428,12 @@ impl<T: Zero + One + Clone> One for Polynomial<T> {
 
 #[cfg(test)]
 mod tests {
+    #[cfg(not(feature = "std"))]
+    extern crate alloc;
+
+    #[cfg(not(feature = "std"))]
+    use alloc::{string::ToString, vec, vec::Vec};
+
     use super::Polynomial;
 
     #[test]
@@ -545,7 +565,7 @@ mod tests {
         }
 
         // Approximate some common functions.
-        use std::f64::consts::PI;
+        use core::f64::consts::PI;
         check(&f64::sin, 7, -PI / 2., PI / 2.);
         check(&f64::cos, 7, 0., PI / 4.);
 
