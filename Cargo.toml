@@ -16,6 +16,18 @@ maintenance = { status = "passively-maintained" }
 num-traits = { version = "0.2", default-features = false }
 serde = { version = "1.0", features = ["derive"], optional = true }
 
+[dev-dependencies]
+criterion = "0.5"
+iter_num_tools = "0.7.1"
+num-complex = "0.4"
+rand = "0"
+num-rational = "0.4"
+num-bigint = "0.4"
+
+[[bench]]
+name = "benchmark"
+harness = false
+
 [features]
 serde = ["dep:serde"]
 default = ["std"]
