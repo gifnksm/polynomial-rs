@@ -17,7 +17,7 @@ num-traits = { version = "0.2", default-features = false }
 serde = { version = "1.0", features = ["derive"], optional = true }
 
 [dev-dependencies]
-criterion = "0.5"
+criterion = "0.6"
 iter_num_tools = "0.7.1"
 num-complex = "0.4"
 rand = "0.8"
