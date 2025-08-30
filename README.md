@@ -4,7 +4,7 @@
 [![license](https://img.shields.io/crates/l/polynomial.svg)](LICENSE)
 [![crates.io](https://img.shields.io/crates/v/polynomial.svg)](https://crates.io/crates/polynomial)
 [![docs.rs](https://img.shields.io/docsrs/polynomial/latest)](https://docs.rs/polynomial/latest/)
-[![rust 1.74.0+ badge](https://img.shields.io/badge/rust-1.74.0+-93450a.svg)](https://doc.rust-lang.org/cargo/reference/manifest.html#the-rust-version-field)
+[![rust 1.81.0+ badge](https://img.shields.io/badge/rust-1.81.0+-93450a.svg)](https://doc.rust-lang.org/cargo/reference/manifest.html#the-rust-version-field)
 [![Rust CI](https://github.com/gifnksm/polynomial-rs/actions/workflows/rust-ci.yml/badge.svg)](https://github.com/gifnksm/polynomial-rs/actions/workflows/rust-ci.yml)
 [![codecov](https://codecov.io/gh/gifnksm/polynomial-rs/branch/master/graph/badge.svg?token=0RxeiNjQNM)](https://codecov.io/gh/gifnksm/polynomial-rs)
 
@@ -40,7 +40,7 @@ polynomial = {version = "0.2.6", default-features = false, features = ["libm"]}
 
 ## Minimum supported Rust version (MSRV)
 
-The minimum supported Rust version is **Rust 1.74.0**.
+The minimum supported Rust version is **Rust 1.71.0**.
 At least the last 3 versions of stable Rust are supported at any given time.
 
 While a crate is pre-release status (0.x.x) it may have its MSRV bumped in a patch release.
