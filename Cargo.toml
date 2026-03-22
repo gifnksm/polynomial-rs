@@ -2,7 +2,7 @@
 name = "polynomial"
 version = "0.2.6"
 edition = "2021"
-rust-version = "1.85.0"
+rust-version = "1.86.0"
 authors = ["gifnksm <makoto.nksm+github@gmail.com>"]
 license = "MIT"
 readme = "README.md"
@@ -17,7 +17,7 @@ num-traits = { version = "0.2", default-features = false }
 serde = { version = "1.0", features = ["derive"], optional = true }
 
 [dev-dependencies]
-criterion = "0.7"
+criterion = "0.8"
 iter_num_tools = "0.7.1"
 num-complex = "0.4"
 rand = "0.10"
