@@ -14,8 +14,7 @@ use num_bigint::BigInt;
 use num_complex::Complex;
 use num_rational::BigRational;
 use polynomial::Polynomial;
-use rand::distributions::Uniform;
-use rand::prelude::Distribution;
+use rand::distr::{Distribution, Uniform};
 use rand::rngs::StdRng;
 use rand::{Rng, SeedableRng};
 
@@ -98,7 +97,7 @@ fn eval_big_rational_polynomial(num_samples: usize, poly_arr: &[Polynomial<BigRa
 
 fn benchmark(c: &mut Criterion) {
     let mut rng = StdRng::seed_from_u64(12345);
-    let f64_dist = Uniform::from(-9.0..9.0);
+    let f64_dist = Uniform::new(-9.0, 9.0).unwrap();
 
     {
         let pole_test_set: [_; 3] =
@@ -117,7 +116,7 @@ fn benchmark(c: &mut Criterion) {
     }
 
     {
-        let i64_dist = Uniform::from(i64::MIN..i64::MAX);
+        let i64_dist = Uniform::new(i64::MIN, i64::MAX).unwrap();
         let pole_test_set: [_; 3] =
             std::array::from_fn(|i| create_rng_big_rational_polynomial(i + 3, &mut rng, &i64_dist));
         c.bench_function("eval_big_rational_polynomial", |b| {
