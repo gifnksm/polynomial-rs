@@ -135,5 +135,6 @@ jobs:
             if [ "$attempt" -eq 3 ]; then
               exit 1
             fi
+            echo "Attempt $attempt failed, retrying in $((attempt * 5)) seconds..."
             sleep $((attempt * 5))
           done
