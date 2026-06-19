@@ -127,4 +127,13 @@ jobs:
         with:
           toolchain: stable
       - name: Compile benchmarks (without running)
-        run: cargo bench --no-run
+        run: |
+          for attempt in 1 2 3; do
+            if cargo bench --no-run; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              exit 1
+            fi
+            sleep $((attempt * 5))
+          done
