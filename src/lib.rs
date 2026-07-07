@@ -238,7 +238,7 @@ where
     }
 }
 
-impl<'a, T> Neg for &'a Polynomial<T>
+impl<T> Neg for &Polynomial<T>
 where
     T: Neg + Zero + Clone,
     <T as Neg>::Output: Zero,
@@ -315,7 +315,7 @@ macro_rules! forward_all_binop {
 
 forward_all_binop!(impl Add, add);
 
-impl<'a, 'b, Lhs, Rhs> Add<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
+impl<Lhs, Rhs> Add<&Polynomial<Rhs>> for &Polynomial<Lhs>
 where
     Lhs: Zero + Add<Rhs> + Clone,
     Rhs: Zero + Clone,
@@ -348,7 +348,7 @@ where
 
 forward_all_binop!(impl Sub, sub);
 
-impl<'a, 'b, Lhs, Rhs> Sub<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
+impl<Lhs, Rhs> Sub<&Polynomial<Rhs>> for &Polynomial<Lhs>
 where
     Lhs: Zero + Sub<Rhs> + Clone,
     Rhs: Zero + Clone,
@@ -379,7 +379,7 @@ where
 
 forward_all_binop!(impl Mul, mul);
 
-impl<'a, 'b, Lhs, Rhs> Mul<&'b Polynomial<Rhs>> for &'a Polynomial<Lhs>
+impl<Lhs, Rhs> Mul<&Polynomial<Rhs>> for &Polynomial<Lhs>
 where
     Lhs: Zero + Mul<Rhs> + Clone,
     Rhs: Zero + Clone,
