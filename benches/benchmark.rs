@@ -8,7 +8,9 @@
 //! function" (and thus time) for each type is the sum across all evaluating every
 //! polynomial in each set for a representative set of times.
 
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use std::hint::black_box;
+
+use criterion::{criterion_group, criterion_main, Criterion};
 use iter_num_tools::lin_space;
 use num_bigint::BigInt;
 use num_complex::Complex;
